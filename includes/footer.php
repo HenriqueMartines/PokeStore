@@ -1,4 +1,11 @@
-<hr>
+</main>
+
 <footer>
-    <h1>Poke Store qualidade infinita!</h1>
+
+    <p>Poké Store - Loja de Cartas Pokémon</p>
+
 </footer>
+
+</body>
+
+</html>

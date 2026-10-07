@@ -1,144 +1,199 @@
-<?php 
-require_once '../database/conect.php';
+<?php
 
-function cadastrar($conexao, $nome, $descricao, $categoria, $preco, $estoque, $imagem){   
-    $sql = "INSERT INTO produtos (nome, descricao, categoria, preco, estoque, imagem) 
-            VALUES (:nome, :descricao, :categoria, :preco, :estoque, :imagem)";
+function cadastrar_produto($conexao, $nome, $descricao, $preco, $quantidade, $imagem)
+{
+
+    $sql = "INSERT INTO produtos
+            (nome, descricao, preco, quantidade, imagem)
+            VALUES
+            (:nome, :descricao, :preco, :quantidade, :imagem)";
 
     try {
+
         $stmt = $conexao->prepare($sql);
 
         $stmt->bindValue(":nome", $nome);
         $stmt->bindValue(":descricao", $descricao);
-        $stmt->bindValue(":categoria", $categoria);
         $stmt->bindValue(":preco", $preco);
-        $stmt->bindValue(":estoque", $estoque);
+        $stmt->bindValue(":quantidade", $quantidade);
         $stmt->bindValue(":imagem", $imagem);
 
         $stmt->execute();
-        echo "Produto inserido com sucesso!";
+
+        echo "Produto cadastrado com sucesso!";
+
     } catch (PDOException $e) {
+
         echo "Erro: " . $e->getMessage();
+
     }
+
 }
 
-function apagar($conexao, $id){
+
+function apagar_produto($conexao, $id)
+{
+
     $sql = "DELETE FROM produtos WHERE id = :id";
 
     try {
+
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":id", $id);
+
+        $stmt->bindValue(":id", $id);
+
         $stmt->execute();
-        echo "Produto $id removido com sucesso!";
-    } catch (PDOException $e){
-        echo "erro: " . $e->getMessage();
+
+        echo "Produto removido com sucesso!";
+
+    } catch (PDOException $e) {
+
+        echo "Erro: " . $e->getMessage();
+
     }
+
 }
 
-function relatorio($conexao){
+
+function listar_produtos($conexao)
+{
+
     $sql = "SELECT * FROM produtos";
 
     try {
+
         $stmt = $conexao->prepare($sql);
+
         $stmt->execute();
 
         $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($produtos as $produto) {
-            echo "ID: {$produto['id']}<br>";
-            echo "Nome: {$produto['nome']}<br>";
-            echo "Descrição: {$produto['descricao']}<br>";
-            echo "Categoria: {$produto['categoria']}<br>";
-            echo "Preço: R$ {$produto['preco']}<br>";
-            echo "Estoque: {$produto['estoque']}<br>";
-            if (!empty($produto['imagem'])) {
-                echo "<img src='/{$produto['imagem']}' width='100'><br>";
-            }
-            echo "<hr>";
-        }
+        return $produtos;
+
     } catch (PDOException $e) {
-        echo "erro: " . $e->getMessage();
+
+        echo "Erro: " . $e->getMessage();
+
     }
+
 }
 
-function atualizar($conexao, $id, $nome, $descricao, $categoria, $preco, $estoque, $imagem){
-    $sql = "UPDATE produtos SET nome = :nome, descricao = :descricao, categoria = :categoria, preco = :preco, estoque = :estoque, imagem = :imagem WHERE id = :id";
+
+function consultar_produto($conexao, $id)
+{
+
+    $sql = "SELECT * FROM produtos WHERE id = :id";
+
     try {
+
+        $stmt = $conexao->prepare($sql);
+
+        $stmt->bindValue(":id", $id);
+
+        $stmt->execute();
+
+        $produto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $produto;
+
+    } catch (PDOException $e) {
+
+        echo "Erro: " . $e->getMessage();
+
+    }
+
+}
+
+
+function atualizar_produto($conexao, $id, $nome, $descricao, $preco, $quantidade)
+{
+
+    $sql = "UPDATE produtos SET
+            nome = :nome,
+            descricao = :descricao,
+            preco = :preco,
+            quantidade = :quantidade
+            WHERE id = :id";
+
+    try {
+
         $stmt = $conexao->prepare($sql);
 
         $stmt->bindValue(":id", $id);
         $stmt->bindValue(":nome", $nome);
         $stmt->bindValue(":descricao", $descricao);
-        $stmt->bindValue(":categoria", $categoria);
         $stmt->bindValue(":preco", $preco);
-        $stmt->bindValue(":estoque", $estoque);
-        $stmt->bindValue(":imagem", $imagem);
+        $stmt->bindValue(":quantidade", $quantidade);
 
         $stmt->execute();
+
         echo "Produto atualizado com sucesso!";
+
     } catch (PDOException $e) {
+
         echo "Erro: " . $e->getMessage();
+
     }
+
 }
 
-function consultar($conexao, $id){
-    $sql = "SELECT * FROM produtos WHERE id = :id";
+
+/* FUNÇÕES DO LOGIN */
+
+
+function cadastrar_user($conexao, $usuario, $senha, $tipo)
+{
+
+    $sql = "INSERT INTO usuarios
+            (usuario, senha, tipo)
+            VALUES
+            (:usuario, :senha, :tipo)";
 
     try {
+
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
 
-        $produto = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($produto) {
-            echo "Nome: {$produto['nome']} <br>";
-            echo "Descrição: {$produto['descricao']} <br>";
-            echo "Categoria: {$produto['categoria']} <br>";
-            echo "Preço: R$ {$produto['preco']} <br>";
-            echo "Estoque: {$produto['estoque']} <br>";
-            if (!empty($produto['imagem'])) {
-                echo "<img src='/{$produto['imagem']}' width='100'><br>";
-            }
-        } else {
-            echo "Produto não encontrado!";
-        }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
-}
-
-// Funções de Usuário / Login
-    function cadastrar_user($conexao, $nome, $email, $senha){   
-    $sql = "INSERT INTO usuarios (nome, email, senha) VALUES (:nome, :email, :senha)";
-
-    try {
-        $stmt = $conexao->prepare($sql);
-        $stmt->bindValue(":nome", $nome);
-        $stmt->bindValue(":email", $email);
+        $stmt->bindValue(":usuario", $usuario);
         $stmt->bindValue(":senha", $senha);
+        $stmt->bindValue(":tipo", $tipo);
 
         $stmt->execute();
-        echo "Usuário inserido com sucesso!";
+
+        echo "Usuário cadastrado com sucesso!";
+
     } catch (PDOException $e) {
+
         echo "Erro: " . $e->getMessage();
+
     }
+
 }
 
-function consulta_user($conexao, $email){
-    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email";
+
+function consulta_user($conexao, $usuario)
+{
+
+    $sql = "SELECT * FROM usuarios
+            WHERE usuario = :usuario";
 
     try {
+
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":email", $email);
+
+        $stmt->bindValue(":usuario", $usuario);
+
         $stmt->execute();
 
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $usuario; 
+
+        return $usuario;
+
     } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
+
+        echo "Erro: " . $e->getMessage();
+
     }
 
 }
-
 
 ?>

@@ -1,0 +1,87 @@
+body {
+    font-family: Arial;
+    background-color: #f2f2f2;
+    margin: 0;
+}
+
+header {
+    background-color: #e3350d;
+    padding: 20px;
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav {
+    margin-top: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+main {
+    width: 90%;
+    margin: 30px auto;
+}
+
+.produtos {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.produto {
+    background-color: white;
+    width: 220px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.produto img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
+.botao {
+    display: inline-block;
+    background-color: #e3350d;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+form {
+    background-color: white;
+    padding: 20px;
+    width: 400px;
+}
+
+input {
+    padding: 8px;
+    margin: 5px 0 15px 0;
+    width: 95%;
+}
+
+button {
+    background-color: #e3350d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}

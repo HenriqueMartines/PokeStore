@@ -1,17 +1,70 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poke Store - Início</title>
-</head>
-<body>
-    <?php include 'includes/header.php'; ?>
+<?php
 
-    <h1>Poke Store - Loja Pokémon</h1>
-    <h2>Seja bem-vindo!</h2>
-    <p>Utilize o menu acima para navegação.</p>
+include 'includes/header.php';
 
-    <?php include 'includes/footer.php'; ?>
-</body>
-</html>
+include 'config/conexao.php';
+
+include 'includes/functions.php';
+
+?>
+
+<h2>Bem-vindo à Poké Store!</h2>
+
+<p>
+    Encontre suas cartas Pokémon favoritas.
+</p>
+
+<h2>Produtos</h2>
+
+<div class="produtos">
+
+<?php
+
+$produtos = listar_produtos($conexao);
+
+foreach ($produtos as $produto) {
+
+?>
+
+    <div class="produto">
+
+        <?php if ($produto['imagem'] != '') { ?>
+
+            <img src="imagens/<?php echo $produto['imagem']; ?>">
+
+        <?php } ?>
+
+        <h3>
+            <?php echo $produto['nome']; ?>
+        </h3>
+
+        <p>
+            <?php echo $produto['descricao']; ?>
+        </p>
+
+        <p>
+            R$ <?php echo $produto['preco']; ?>
+        </p>
+
+        <p>
+            Estoque: <?php echo $produto['quantidade']; ?>
+        </p>
+
+        <a class="botao"
+           href="produtos.php?id=<?php echo $produto['id']; ?>">
+
+            Ver produto
+
+        </a>
+
+    </div>
+
+<?php
+
+}
+
+?>
+
+</div>
+
+<?php include 'includes/footer.php'; ?>

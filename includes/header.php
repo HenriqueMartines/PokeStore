@@ -1,18 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Poké Store</title>
+
+    <link rel="stylesheet" href="/pokestore/css/style.css">
+
+</head>
+
+<body>
+
 <header>
+
+    <h1>Poké Store</h1>
+
     <nav>
-        <div>
-            <a href="/index.php">Início</a>
-            <a href="/app/create.php">Cadastrar Produto</a>
-            <a href="/app/delete.php">Excluir Produto</a>
-            <a href="/app/update.php">Atualizar Produto</a>
-            <a href="/app/select.php">Relatório</a>
-            <a href="/app/select_w.php">Consultar</a>
-        </div>
-        <div>
-            <a href="/login/login.php">Entrar</a>
-            <a href="/login/cadastrar.php">Cadastrar Usuário</a>
-            <a href="/login/logout.php">Sair</a>
-        </div>
+
+        <a href="/pokestore/index.php">Início</a>
+
+        <a href="/pokestore/produtos.php">Produtos</a>
+
+        <a href="/pokestore/login/login.php">Login</a>
+
     </nav>
+
 </header>
-<hr>
+
+<main>

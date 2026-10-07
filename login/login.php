@@ -1,38 +1,77 @@
-<?php require_once '../includes/functions.php';?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <?php include '../includes/header.php';?>
-    <main>
-    <h1>Entrar no Sistema</h1>
-    <form action="" method="post">
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email" required><br>
-        <label for="senha">Senha: </label>
-        <input type="password" name="senha" id="senha" required><br><br>
-        <input type="submit" value="Entrar">
-    </form>
-    <?php 
-    if ($_SERVER['REQUEST_METHOD'] == "POST"){
-        $user = consulta_user($conexao, $_POST['email']);
-        if ($user && $user['senha'] == $_POST['senha']) {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
-            $_SESSION['usuario'] = $user['email'];
-            header("Location: /pokestore/index.php");
-            exit();
+<?php
+
+session_start();
+
+include '../config/conexao.php';
+
+if (isset($_POST['entrar'])) {
+
+    $usuario = $_POST['usuario'];
+    $senha = $_POST['senha'];
+
+    $sql = "SELECT * FROM usuarios
+            WHERE usuario = '$usuario'
+            AND senha = '$senha'";
+
+    $resultado = pg_query($conn, $sql);
+
+    if (pg_num_rows($resultado) > 0) {
+
+        $dados = pg_fetch_assoc($resultado);
+
+        $_SESSION['usuario'] = $dados['usuario'];
+        $_SESSION['tipo'] = $dados['tipo'];
+
+        if ($dados['tipo'] == 'admin') {
+
+            header("Location: ../admin/index.php");
+
         } else {
-            echo "Email ou senha incorretos!";
+
+            header("Location: ../index.php");
+
         }
+
+        exit;
+
+    } else {
+
+        $mensagem = "Usuario ou senha incorretos.";
+
     }
-    ?>
-    </main>
-    <?php include '../includes/footer.php';?>
-</body>
-</html>
+
+}
+
+?>
+
+<?php include '../includes/header.php'; ?>
+
+<h2>Login</h2>
+
+<?php
+
+if (isset($mensagem)) {
+
+    echo "<p>$mensagem</p>";
+
+}
+
+?>
+
+<form method="POST">
+
+    <label>Usuario:</label>
+
+    <input type="text" name="usuario">
+
+    <label>Senha:</label>
+
+    <input type="password" name="senha">
+
+    <button type="submit" name="entrar">
+        Entrar
+    </button>
+
+</form>
+
+<?php include '../includes/footer.php'; ?>
