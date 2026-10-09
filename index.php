@@ -8,10 +8,10 @@ include 'includes/functions.php';
 
 ?>
 
-<h2>Bem-vindo à Poké Store!</h2>
+<h2>Bem vindo a Poke Store!</h2>
 
 <p>
-    Encontre suas cartas Pokémon favoritas.
+    Encontre suas cartas Pokémon favoritas!!!
 </p>
 
 <h2>Produtos</h2>

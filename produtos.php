@@ -2,19 +2,17 @@
 
 <?php
 
-include 'config/conexao.php';
+include 'includes/functions.php';
 
-$id = $_GET['id'];
+$produto=null;
 
-$sql = "SELECT * FROM produtos WHERE id = $id";
-
-$resultado = pg_query($conn, $sql);
-
-$produto = pg_fetch_assoc($resultado);
+if (isset($_GET['id'])) {
+    $produto = consultar_produto($conexao, $_GET['id']);
+}
 
 ?>
 
-<?php if ($produto) { ?>
+<?php if ($produto): ?>
 
     <h2><?php echo $produto['nome']; ?></h2>
 
@@ -38,10 +36,9 @@ $produto = pg_fetch_assoc($resultado);
         Comprar
     </button>
 
-<?php } else { ?>
+<?php  else:  ?>
 
     <p>Produto não encontrado.</p>
 
-<?php } ?>
-
-<?php include 'includes/footer.php'; ?>
+<?php endif; ?>
+ 

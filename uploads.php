@@ -1,0 +1,1 @@
+<form method="POST" action="adicionar.php" enctype="multipart/form-data">

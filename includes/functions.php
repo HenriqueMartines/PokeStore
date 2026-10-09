@@ -1,35 +1,20 @@
 <?php
-
-function cadastrar_produto($conexao, $nome, $descricao, $preco, $quantidade, $imagem)
+function adicionar_produto($conexao, $nome, $preco, $imagem)
 {
-
-    $sql = "INSERT INTO produtos
-            (nome, descricao, preco, quantidade, imagem)
-            VALUES
-            (:nome, :descricao, :preco, :quantidade, :imagem)";
-
+    $sql = "INSERT INTO produtos (nome, preco, imagem) VALUES (:nome, :preco, :imagem)";
+    
     try {
-
         $stmt = $conexao->prepare($sql);
-
-        $stmt->bindValue(":nome", $nome);
-        $stmt->bindValue(":descricao", $descricao);
-        $stmt->bindValue(":preco", $preco);
-        $stmt->bindValue(":quantidade", $quantidade);
-        $stmt->bindValue(":imagem", $imagem);
-
-        $stmt->execute();
-
-        echo "Produto cadastrado com sucesso!";
-
+        $stmt->bindValue(':nome', $nome);
+        $stmt->bindValue(':preco', $preco);
+        $stmt->bindValue(':imagem', $imagem);
+        
+        return $stmt->execute();
     } catch (PDOException $e) {
-
-        echo "Erro: " . $e->getMessage();
-
+        echo "<h3 style='color:red;'>Erro ao inserir produto na base de dados: " . $e->getMessage() . "</h3>";
+        exit;
     }
-
 }
-
 
 function apagar_produto($conexao, $id)
 {
@@ -57,7 +42,7 @@ function apagar_produto($conexao, $id)
 
 function listar_produtos($conexao)
 {
-
+    
     $sql = "SELECT * FROM produtos";
 
     try {
@@ -143,7 +128,7 @@ function atualizar_produto($conexao, $id, $nome, $descricao, $preco, $quantidade
 
 function cadastrar_user($conexao, $usuario, $senha, $tipo)
 {
-
+    require_once '../config/conexao.php';
     $sql = "INSERT INTO usuarios
             (usuario, senha, tipo)
             VALUES
@@ -172,28 +157,20 @@ function cadastrar_user($conexao, $usuario, $senha, $tipo)
 
 function consulta_user($conexao, $usuario)
 {
-
-    $sql = "SELECT * FROM usuarios
-            WHERE usuario = :usuario";
+    // LOWER() garante que encontra o utilizador independentemente de maiúsculas/minúsculas
+    $sql = "SELECT * FROM usuarios WHERE LOWER(usuario) = LOWER(:usuario)";
 
     try {
-
         $stmt = $conexao->prepare($sql);
-
-        $stmt->bindValue(":usuario", $usuario);
-
+        $stmt->bindValue(":usuario", trim($usuario));
         $stmt->execute();
 
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $usuario;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
-
-        echo "Erro: " . $e->getMessage();
-
+        echo "Erro na consulta: " . $e->getMessage();
+        return false;
     }
-
 }
 
 ?>
