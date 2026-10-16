@@ -4,7 +4,7 @@ session_start();
 include '../config/conexao.php';
 include '../includes/functions.php';
 
-// Proteção: apenas admin acede
+// Proteção: apenas admin acessa
 if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] != 'admin') {
     header("Location: ../login/login.php");
     exit;
@@ -13,6 +13,8 @@ if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] != 'admin') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
     $preco = $_POST['preco'];
+    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
+    $quantidade = isset($_POST['quantidade']) ? $_POST['quantidade'] : 0;
     $nome_imagem = '';
 
     // Trata o upload da imagem
@@ -30,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         move_uploaded_file($_FILES['imagem']['tmp_name'], $pasta_destino . $nome_imagem);
     }
 
-    // Insere na base de dados
+    // Insere no banco de dados
     if (!empty($nome) && !empty($preco)) {
-        cadastrar_produto($conexao, $nome, $descricao, $preco, $quantidade, $nome_imagem);
+        adicionar_produto($conexao, $nome, $preco, $nome_imagem, $descricao, $quantidade);
         header("Location: index.php");
         exit;
     } else {
@@ -55,6 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Preço:</label><br>
     <input type="number" step="0.01" name="preco" required><br><br>
+
+    <label>Descrição:</label><br>
+    <textarea name="descricao"></textarea><br><br>
+
+    <label>Quantidade:</label><br>
+    <input type="number" name="quantidade" value="1"><br><br>
 
     <label>Imagem do Produto:</label><br>
     <input type="file" name="imagem" accept="image/*"><br><br>

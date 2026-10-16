@@ -1,17 +1,19 @@
 <?php
-function adicionar_produto($conexao, $nome, $preco, $imagem)
+function adicionar_produto($conexao, $nome, $preco, $imagem, $descricao, $quantidade)
 {
-    $sql = "INSERT INTO produtos (nome, preco, imagem) VALUES (:nome, :preco, :imagem)";
+    $sql = "INSERT INTO produtos (nome, preco, imagem, descricao, quantidade) VALUES (:nome, :preco, :imagem, :descricao, :quantidade)";
     
     try {
         $stmt = $conexao->prepare($sql);
         $stmt->bindValue(':nome', $nome);
         $stmt->bindValue(':preco', $preco);
         $stmt->bindValue(':imagem', $imagem);
+        $stmt->bindValue(':descricao', $descricao);
+        $stmt->bindValue(':quantidade', $quantidade);
         
         return $stmt->execute();
     } catch (PDOException $e) {
-        echo "<h3 style='color:red;'>Erro ao inserir produto na base de dados: " . $e->getMessage() . "</h3>";
+        echo "<h3 style='color:red;'>Erro ao inserir produto no banco: " . $e->getMessage() . "</h3>";
         exit;
     }
 }

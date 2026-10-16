@@ -1,7 +1,7 @@
 <?php include 'includes/header.php'; ?>
 
 <?php
-
+include 'config/conexao.php';
 include 'includes/functions.php';
 
 $produto=null;

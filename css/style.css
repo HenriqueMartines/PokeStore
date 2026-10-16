@@ -1,87 +1,208 @@
-body {
-    font-family: Arial;
-    background-color: #f2f2f2;
-    margin: 0;
+/* Importação de fonte moderna */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box;
 }
 
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho Limpo e Moderno */
 header {
-    background-color: #e3350d;
-    padding: 20px;
-    color: white;
+    background-color: #4777fc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 15px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 header h1 {
     margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
+/* Navegação */
 nav {
-    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 nav a {
-    color: white;
+    color: #475569;
     text-decoration: none;
-    margin-right: 20px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
+nav a:hover {
+    color: #1d4ed8;
+    background-color: #eff6ff;
+}
+
+/* Conteúdo Principal */
 main {
     width: 90%;
-    margin: 30px auto;
+    max-width: 1200px;
+    margin: 35px auto;
 }
 
+/* Grelha de Produtos (Evita que os cartões estiquem na tela toda) */
 .produtos {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 260px));
     gap: 20px;
-    flex-wrap: wrap;
+    margin-top: 20px;
 }
 
+/* Cartão do Produto */
 .produto {
-    background-color: white;
-    width: 220px;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
+.produto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+/* Imagem do Produto */
 .produto img {
-    width: 200px;
-    height: 200px;
+    width: 100%;
+    height: 210px;
     object-fit: contain;
-}
-
-.botao {
-    display: inline-block;
-    background-color: #e3350d;
-    color: white;
-    padding: 10px;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-form {
-    background-color: white;
-    padding: 20px;
-    width: 400px;
-}
-
-input {
+    border-radius: 8px;
+    background-color: #f8fafc;
     padding: 8px;
-    margin: 5px 0 15px 0;
-    width: 95%;
+    margin-bottom: 12px;
+    display: block;
 }
 
-button {
-    background-color: #e3350d;
-    color: white;
-    padding: 10px 20px;
+.produto h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 8px 0 4px 0;
+    color: #0f172a;
+}
+
+.produto p, .produto .preco {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 14px;
+}
+
+/* Botões Padrão (Tamanho ajustado para caberem lado a lado) */
+.botao, button, a.botao {
+    display: inline-block;
+    background-color: #2563eb;
+    color: #ffffff;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 6px;
     border: none;
+    font-weight: 600;
+    font-size: 0.88rem;
     cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease;
+    margin-top: 6px;
+    margin-right: 6px;
 }
 
+.botao:hover, button:hover, a.botao:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Estilização automática dos botões do Admin pelas URLs */
+a[href*="adicionar"] {
+    background-color: #2563eb;
+    color: #ffffff;
+    margin-bottom: 15px;
+    padding: 10px 18px;
+    border-radius: 8px;
+}
+
+a[href*="editar"] {
+    background-color: #2563eb;
+    color: #ffffff;
+}
+
+a[href*="excluir"] {
+    background-color: #ef4444; /* Vermelho para exclusão */
+    color: #ffffff;
+}
+
+/* Formulários */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    margin: 20px auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+    display: block;
+    margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="file"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Rodapé */
 footer {
-    background-color: #333;
-    color: white;
+    background-color: #0f172a;
+    color: #94a3b8;
     text-align: center;
-    padding: 20px;
-    margin-top: 40px;
+    padding: 25px;
+    margin-top: 60px;
+    font-size: 0.9rem;
 }
