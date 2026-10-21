@@ -11,34 +11,54 @@ if (!isset($_SESSION['usuario']) || $_SESSION['tipo'] != 'admin') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nome = trim($_POST['nome']);
-    $preco = $_POST['preco'];
-    $descricao = isset($_POST['descricao']) ? trim($_POST['descricao']) : '';
-    $quantidade = isset($_POST['quantidade']) ? $_POST['quantidade'] : 0;
+    $nome = trim($_POST['nome'] ?? '');
+    $preco = $_POST['preco'] ?? '';
+    $descricao = trim($_POST['descricao'] ?? '');
+    $quantidade = filter_var($_POST['quantidade'] ?? 0, FILTER_VALIDATE_INT);
     $nome_imagem = '';
 
-    // Trata o upload da imagem
-    if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] === UPLOAD_ERR_OK) {
-        $extensao = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
-        $nome_imagem = time() . '_' . uniqid() . '.' . $extensao;
+    if (!validar_csrf_token($_POST['csrf_token'] ?? null)) {
+        $erro = "A solicitação expirou. Atualize a página e tente novamente.";
+    } elseif ($nome === '' || !is_numeric($preco) || (float) $preco < 0 || $quantidade === false || $quantidade < 0) {
+        $erro = "Informe nome, preço válido e quantidade não negativa.";
+    } else {
+        $upload = $_FILES['imagem'] ?? null;
 
-        $pasta_destino = '../imagens/';
+        if ($upload && $upload['error'] !== UPLOAD_ERR_NO_FILE) {
+            if ($upload['error'] !== UPLOAD_ERR_OK || $upload['size'] > 5 * 1024 * 1024) {
+                $erro = "Não foi possível enviar a imagem ou ela excede o limite de 5 MB.";
+            } else {
+                $tiposPermitidos = [
+                    'image/jpeg' => 'jpg',
+                    'image/png' => 'png',
+                    'image/webp' => 'webp',
+                    'image/avif' => 'avif',
+                ];
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $tipo = $finfo->file($upload['tmp_name']);
 
-        // Cria a pasta se não existir
-        if (!is_dir($pasta_destino)) {
-            mkdir($pasta_destino, 0777, true);
+                if (!isset($tiposPermitidos[$tipo])) {
+                    $erro = "Formato de imagem inválido. Use JPEG, PNG, WebP ou AVIF.";
+                } else {
+                    $pastaDestino = '../imagens/';
+
+                    if (!is_dir($pastaDestino) && !mkdir($pastaDestino, 0755, true) && !is_dir($pastaDestino)) {
+                        throw new RuntimeException('Não foi possível criar a pasta de imagens.');
+                    }
+
+                    $nome_imagem = bin2hex(random_bytes(16)) . '.' . $tiposPermitidos[$tipo];
+                    if (!move_uploaded_file($upload['tmp_name'], $pastaDestino . $nome_imagem)) {
+                        throw new RuntimeException('Não foi possível salvar a imagem enviada.');
+                    }
+                }
+            }
         }
 
-        move_uploaded_file($_FILES['imagem']['tmp_name'], $pasta_destino . $nome_imagem);
-    }
-
-    // Insere no banco de dados
-    if (!empty($nome) && !empty($preco)) {
-        adicionar_produto($conexao, $nome, $preco, $nome_imagem, $descricao, $quantidade);
-        header("Location: index.php");
-        exit;
-    } else {
-        $erro = "Preencha o nome e o preço do produto!";
+        if (!isset($erro)) {
+            adicionar_produto($conexao, $nome, $preco, $nome_imagem, $descricao, $quantidade);
+            header("Location: index.php");
+            exit;
+        }
     }
 }
 ?>
@@ -48,10 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <h2>Adicionar Novo Produto</h2>
 
 <?php if (isset($erro)): ?>
-    <p style="color: red;"><?php echo $erro; ?></p>
+    <p style="color: red;"><?php echo html_escape($erro); ?></p>
 <?php endif; ?>
 
 <form method="POST" action="adicionar.php" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="<?php echo html_escape(csrf_token()); ?>">
     <label>Nome da Carta/Produto:</label><br>
     <input type="text" name="nome" required><br><br>
 

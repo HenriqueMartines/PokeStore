@@ -7,11 +7,11 @@ include '../includes/functions.php';
 $mensagem = "";
 
 if (isset($_POST['cadastrar'])) {
-    $usuario = trim($_POST['usuario']);
-    $senha = trim($_POST['senha']);
+    $usuario = trim($_POST['usuario'] ?? '');
+    $senha = $_POST['senha'] ?? '';
     $tipo = 'cliente'; // Todo novo cadastro pelo site é do tipo 'cliente'
 
-    if (!empty($usuario) && !empty($senha)) {
+    if (!empty($usuario) && is_string($senha) && $senha !== '') {
         // Verifica se o usuário já existe
         $usuarioExistente = consulta_user($conexao, $usuario);
 
@@ -34,7 +34,7 @@ if (isset($_POST['cadastrar'])) {
 <h2>Criar Conta</h2>
 
 <?php if (!empty($mensagem)): ?>
-    <p style="color: red;"><?php echo $mensagem; ?></p>
+    <p style="color: red;"><?php echo html_escape($mensagem); ?></p>
 <?php endif; ?>
 
 <form method="POST">

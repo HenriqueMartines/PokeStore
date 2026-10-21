@@ -20,7 +20,7 @@ include '../includes/functions.php'; // Incluído para usar listar_produtos()
 <h2>Área do Administrador</h2>
 
 <p>
-    Bem-vindo, <?php echo $_SESSION['usuario']; ?>!
+    Bem-vindo, <?php echo html_escape($_SESSION['usuario']); ?>!
 </p>
 
 <p>
@@ -39,20 +39,22 @@ if (!empty($produtos)) {
 ?>
         <div class="produto">
             <?php if (!empty($produto['imagem'])) { ?>
-                <img src="../imagens/<?php echo $produto['imagem']; ?>">
+                <img src="../imagens/<?php echo rawurlencode($produto['imagem']); ?>" alt="<?php echo html_escape($produto['nome']); ?>">
             <?php } ?>
 
-            <h3><?php echo $produto['nome']; ?></h3>
+            <h3><?php echo html_escape($produto['nome']); ?></h3>
 
-            <p>R$ <?php echo $produto['preco']; ?></p>
+            <p>R$ <?php echo html_escape($produto['preco']); ?></p>
 
-            <a class="botao" href="editar.php?id=<?php echo $produto['id']; ?>">
+            <a class="botao" href="editar.php?id=<?php echo (int) $produto['id']; ?>">
                 Editar
             </a>
 
-            <a class="botao" href="excluir.php?id=<?php echo $produto['id']; ?>">
-                Excluir
-            </a>
+            <form method="POST" action="excluir.php">
+                <input type="hidden" name="id" value="<?php echo (int) $produto['id']; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo html_escape(csrf_token()); ?>">
+                <button class="botao" type="submit">Excluir</button>
+            </form>
         </div>
 <?php
     }

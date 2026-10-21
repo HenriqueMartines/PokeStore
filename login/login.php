@@ -6,13 +6,14 @@ include '../includes/functions.php';
 
 if (isset($_POST['entrar'])) {
 
-    $usuario = trim($_POST['usuario']);
-    $senha = trim($_POST['senha']);
+    $usuario = trim($_POST['usuario'] ?? '');
+    $senha = $_POST['senha'] ?? '';
 
     $dados = consulta_user($conexao, $usuario);
 
-    if ($dados && trim($dados['senha']) === $senha) {
+    if ($dados && is_string($senha) && validar_senha_user($conexao, $dados, $senha)) {
 
+        session_regenerate_id(true);
         $_SESSION['usuario'] = $dados['usuario'];
         $_SESSION['tipo'] = $dados['tipo'];
 
@@ -39,7 +40,7 @@ if (isset($_GET['sucesso'])) {
 }
 
 if (isset($mensagem)) {
-    echo "<p style='color: red;'>$mensagem</p>";
+    echo "<p style='color: red;'>" . html_escape($mensagem) . "</p>";
 }
 ?>
 

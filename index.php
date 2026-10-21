@@ -1,12 +1,12 @@
 <?php
-
-include 'includes/header.php';
-
 include 'config/conexao.php';
-
 include 'includes/functions.php';
-
+include 'includes/header.php';
 ?>
+
+<div class="banner-promocional">        
+    <img src="imagens/banner.jpg" alt="Novo Banner promocional da Poké Store">
+</div>
 
 <h2>Bem vindo a Poke Store!</h2>
 
@@ -30,28 +30,28 @@ foreach ($produtos as $produto) {
 
         <?php if ($produto['imagem'] != '') { ?>
 
-            <img src="imagens/<?php echo $produto['imagem']; ?>">
+            <img src="imagens/<?php echo rawurlencode($produto['imagem']); ?>" alt="<?php echo html_escape($produto['nome']); ?>">
 
         <?php } ?>
 
         <h3>
-            <?php echo $produto['nome']; ?>
+            <?php echo html_escape($produto['nome']); ?>
         </h3>
 
         <p>
-            <?php echo $produto['descricao']; ?>
+            <?php echo html_escape($produto['descricao']); ?>
         </p>
 
         <p>
-            R$ <?php echo $produto['preco']; ?>
+            R$ <?php echo html_escape($produto['preco']); ?>
         </p>
 
         <p>
-            Estoque: <?php echo $produto['quantidade']; ?>
+            Estoque: <?php echo (int) $produto['quantidade']; ?>
         </p>
 
         <a class="botao"
-           href="produtos.php?id=<?php echo $produto['id']; ?>">
+           href="produtos.php?id=<?php echo (int) $produto['id']; ?>">
 
             Ver produto
 
