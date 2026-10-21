@@ -6,6 +6,8 @@ $database = "pokemon_store";
 $usuario = "postgres";
 $senha = "011625";
 
+define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
+
 try {
 
     $conexao = new PDO(

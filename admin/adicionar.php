@@ -42,14 +42,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $pastaDestino = '../imagens/';
 
-                    if (!is_dir($pastaDestino) && !mkdir($pastaDestino, 0755, true) && !is_dir($pastaDestino)) {
-                        throw new RuntimeException('Não foi possível criar a pasta de imagens.');
+                    // ✅ CÓDIGO NOVO (Não quebra a página):
+                    if (!is_dir($pastaDestino)) {
+                        @mkdir($pastaDestino, 0775, true);
                     }
 
-                    $nome_imagem = bin2hex(random_bytes(16)) . '.' . $tiposPermitidos[$tipo];
+                    if (!is_dir($pastaDestino) || !is_writable($pastaDestino)) {
+                         $erro = "Sem permissão para salvar imagens na pasta 'imagens/'. Execute o chown/chmod no servidor.";
+                    } else {
+                         $nome_imagem = bin2hex(random_bytes(16)) . '.' . $tiposPermitidos[$tipo];
                     if (!move_uploaded_file($upload['tmp_name'], $pastaDestino . $nome_imagem)) {
-                        throw new RuntimeException('Não foi possível salvar a imagem enviada.');
+                     $erro = "Falha ao mover a imagem para o servidor.";
                     }
+                }   
                 }
             }
         }
