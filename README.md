@@ -68,8 +68,8 @@ O arquivo de conexão encontra-se em `config/conexao.php`. Verifique se os dados
 $host     = "localhost"; // Ou o IP da máquina do servidor
 $port     = "5432";
 $database = "pokemon_store";
-$usuario  = "postgres";
-$senha    = "011625";
+$usuario  = "pokestore";
+$senha    = "pokestore";
 
 define('BASE_URL', 'http://' . $_SERVER['HTTP_HOST'] . '/');
 
