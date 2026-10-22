@@ -214,22 +214,4 @@ Armazena as contas registradas no sistema e o tipo de permissão de acesso.
 
 ---
 
-### 6.2 Tabela: `produtos`
-Armazena as cartas e artigos Pokémon cadastrados para venda na loja.
 
-| Campo | Código | Tipo | Tamanho | Restrições | Descrição |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do produto. |
-| **Nome** | `nome` | VARCHAR | 100 | NOT NULL | Nome da carta ou produto. |
-| **Descrição** | `descricao` | VARCHAR | 255 | NULL | Descrição com detalhes sobre o produto. |
-| **Preço** | `preco` | NUMERIC | (10,2) | NOT NULL | Valor de venda em Reais (R$). |
-| **Quantidade** | `quantidade` | INTEGER | - | NOT NULL | Quantidade do item disponível em estoque. |
-| **Imagem** | `imagem` | VARCHAR | 255 | NULL | Caminho/nome do arquivo de foto salvo na pasta `imagens/`. |
-
----
-
-## 7. Considerações Finais
-
-O desenvolvimento da **PokéStore** permitiu aplicar na prática conceitos de arquitetura web em PHP, integração com o SGBD PostgreSQL e gerenciamento de infraestrutura Linux em servidores Nginx.
-
-A estruturação flexível da aplicação garante que ela possa ser facilmente clonada, implantada e executada sob qualquer endereço IP de rede local ou remota, oferecendo uma experiência fluida tanto para clientes navegantes quanto para os administradores da loja.
