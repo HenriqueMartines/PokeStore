@@ -159,41 +159,4 @@ Com o serviço do Nginx rodando, abra o seu navegador e acesse a aplicação pel
 | :--- | :--- | :--- | :--- | :--- |
 | **PB01** | Modelagem do Banco | Criar a estrutura das tabelas `usuarios` e `produtos` no PostgreSQL. | Alta | Concluído |
 | **PB02** | Script de Conexão | Implementar a conexão via PDO no arquivo `config/conexao.php`. | Alta | Concluído |
-| **PB03** | Tela de Login e Cadastro | Criar formulários e lógica para autenticação e criação de contas. | Alta | Concluído |
-| **PB04** | Vitrine de Produtos | Desenvolver as telas `index.php` e `produtos.php` para exibição dos produtos cadastrados. | Alta | Concluído |
-| **PB05** | Painel Admin (CRUD) | Desenvolver as telas de adicionar, editar e excluir produtos. | Alta | Concluído |
-| **PB06** | Sistema de Uploads | Criar o manipulador `uploads.php` para envio e salvamento de imagens. | Alta | Concluído |
-| **PB07** | Configuração do Servidor | Ajustar permissões `chown` e `chmod` no Nginx para gravação de arquivos no Linux. | Alta | Concluído |
-
----
-
-## 5. Estrutura do Projeto
-
-```text
-pokestore/
-├── admin/
-│   ├── adicionar.php     # Formulário e lógica de cadastro de novos produtos
-│   ├── editar.php        # Formulário e lógica de alteração de produtos
-│   ├── excluir.php       # Script de remoção de produtos
-│   └── index.php         # Painel principal da administração
-├── config/
-│   └── conexao.php       # Arquivo de conexão com o banco PostgreSQL (PDO)
-├── css/
-│   └── style.css         # Estilização visual da aplicação
-├── imagens/              # Diretório onde as imagens dos produtos ficam salvas
-├── includes/
-│   ├── footer.php        # Rodapé padrão incluído nas páginas
-│   ├── functions.php     # Funções auxiliares, validações e controle de sessão
-│   └── header.php        # Cabeçalho e menu principal do site
-├── login/
-│   ├── cadastrar.php     # Tela de cadastro para novos usuários
-│   ├── login.php         # Tela de login e autenticação
-│   └── logout.php        # Script para encerrar a sessão do usuário
-├── index.php             # Página inicial / Vitrine do site
-├── pokemon_store.sql     # Script SQL de criação do banco e dados iniciais
-├── produtos.php          # Página de exibição do catálogo de produtos
-├── README.md             # Documentação completa do projeto
-└── uploads.php           # Script responsável pelo processamento dos arquivos de imagem
-```
-
 
