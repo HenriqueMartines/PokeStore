@@ -196,22 +196,4 @@ pokestore/
 └── uploads.php           # Script responsável pelo processamento dos arquivos de imagem
 ```
 
----
-
-## 6. Estruturação do Banco de Dados e Dicionário de Dados
-
-O banco de dados `pokemon_store` possui duas tabelas principais no schema `public`.
-
-### 6.1 Tabela: `usuarios`
-Armazena as contas registradas no sistema e o tipo de permissão de acesso.
-
-| Campo | Código | Tipo | Tamanho | Restrições | Descrição |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do usuário. |
-| **Usuário** | `usuario` | VARCHAR | 50 | NOT NULL | Nome/Login utilizado para autenticação. |
-| **Senha** | `senha` | VARCHAR | 50 | NOT NULL | Senha do usuário. |
-| **Tipo** | `tipo` | VARCHAR | 20 | NOT NULL | Define a permissão (`admin` ou `cliente`). |
-
----
-
 
