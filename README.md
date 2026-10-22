@@ -128,35 +128,3 @@ Com o serviço do Nginx rodando, abra o seu navegador e acesse a aplicação pel
 | **RF07** | Edição de Produtos | O sistema deve permitir alterar os dados de um produto existente e atualizar sua imagem. | Alta |
 | **RF08** | Exclusão de Produtos | O sistema deve permitir ao administrador remover produtos do catálogo e do banco de dados. | Alta |
 | **RF09** | Upload de Imagens | O sistema deve processar o envio de arquivos de imagem e armazená-los na pasta `imagens/`. | Alta |
-
----
-
-### 3.3 Requisitos Não Funcionais (RNF)
-
-| ID | Título | Descrição | Prioridade |
-| :--- | :--- | :--- | :--- |
-| **RNF01** | Tecnologias | O sistema deve ser desenvolvido em PHP com banco de dados PostgreSQL. | Alta |
-| **RNF02** | Conexão Segura | As consultas ao banco de dados devem ser executadas via extensão PDO (`pgsql`). | Alta |
-| **RNF03** | Endereçamento Dinâmico | O sistema deve construir as URLs usando `$_SERVER['HTTP_HOST']` para funcionar em qualquer IP de rede. | Alta |
-| **RNF04** | Interface Responsiva | O layout deve ser estilizado via arquivo CSS próprio (`style.css`). | Média |
-
----
-
-### 3.4 Regras de Negócio (RN)
-
-| ID | Título | Regra / Condição |
-| :--- | :--- | :--- |
-| **RN01** | Acesso Administrativo | Somente usuários identificados com `tipo = 'admin'` na sessão podem acessar as ferramentas em `admin/`. |
-| **RN02** | Perfil Inicial | Todo cadastro feito pelo formulário público (`cadastrar.php`) recebe automaticamente o tipo `cliente`. |
-| **RN03** | Preço e Estoque | O campo preço não pode conter valores negativos e a quantidade do produto deve ser um inteiro válido. |
-| **RN04** | Integridade dos Arquivos | As fotos de produtos enviados devem ser renomeadas via código antes de salvas para evitar sobrescrever imagens com nomes iguais. |
-
----
-
-## 4. Product Backlog
-
-| ID | Item | Descrição | Prioridade | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| **PB01** | Modelagem do Banco | Criar a estrutura das tabelas `usuarios` e `produtos` no PostgreSQL. | Alta | Concluído |
-| **PB02** | Script de Conexão | Implementar a conexão via PDO no arquivo `config/conexao.php`. | Alta | Concluído |
-
