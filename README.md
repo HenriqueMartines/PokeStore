@@ -34,10 +34,25 @@ cd pokestore
    sudo -u postgres psql
    ```
 
-2. Crie o banco de dados `pokemon_store`:
+2. Crie o usuário `pokestore`, o banco de dados `pokemon_store` e atribua as permissões necessárias:
 
    ```sql
-   CREATE DATABASE pokemon_store;
+   -- Criar o usuário da aplicação com a senha
+   CREATE USER pokestore WITH PASSWORD 'pokestore';
+
+   -- Criar o banco de dados pertencente ao usuário pokestore
+   CREATE DATABASE pokemon_store OWNER pokestore;
+
+   -- Conectar ao banco recém-criado
+   \c pokemon_store
+
+   -- Conceder permissões no schema public e em todas as tabelas
+   GRANT ALL ON SCHEMA public TO pokestore;
+   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO pokestore;
+   GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO pokestore;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO pokestore;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO pokestore;
+
    \q
    ```
 
@@ -95,54 +110,54 @@ Com o serviço do Nginx rodando, abra o seu navegador e acesse a aplicação pel
 
 ### 3.1 Classes de Usuários
 
-| Tipo de Usuário | Descrição e Permissões | 
-| ----- | ----- | 
-| **Visitante / Cliente** | Pode navegar pela vitrine principal, visualizar os detalhes dos produtos e criar uma conta pública. | 
-| **Administrador** | Usuário com permissão especial (`tipo = 'admin'`) que possui acesso às telas de gerenciamento (adicionar, editar e apagar cartas e produtos). | 
+| Tipo de Usuário | Descrição e Permissões |
+| :--- | :--- |
+| **Visitante / Cliente** | Pode navegar pela vitrine principal, visualizar os detalhes dos produtos e criar uma conta pública. |
+| **Administrador** | Usuário com permissão especial (`tipo = 'admin'`) que possui acesso às telas de gerenciamento (adicionar, editar e apagar cartas e produtos). |
 
 ### 3.2 Requisitos Funcionais (RF)
 
-| ID | Título | Descrição | Prioridade | 
-| ----- | ----- | ----- | ----- | 
-| **RF01** | Cadastro de Usuários | O sistema deve permitir que novos clientes criem uma conta informando nome de usuário e senha. | Alta | 
-| **RF02** | Login e Autenticação | O sistema deve autenticar usuários cadastrados e abrir uma sessão válida. | Alta | 
-| **RF03** | Controle de Acesso | O sistema deve restringir o acesso à pasta `admin/` apenas para usuários com o perfil `admin`. | Alta | 
-| **RF04** | Encerramento de Sessão (Logout) | O sistema deve disponibilizar funcionalidade para encerrar a sessão ativa. | Alta | 
-| **RF05** | Vitrine de Produtos | O sistema deve listar as cartas e produtos salvos no banco de dados na página inicial. | Alta | 
-| **RF06** | Cadastro de Produtos | O sistema deve permitir que o administrador cadastre novos produtos com nome, descrição, preço, quantidade e foto. | Alta | 
-| **RF07** | Edição de Produtos | O sistema deve permitir alterar os dados de um produto existente e atualizar sua imagem. | Alta | 
-| **RF08** | Exclusão de Produtos | O sistema deve permitir ao administrador remover produtos do catálogo e do banco de dados. | Alta | 
-| **RF09** | Upload de Imagens | O sistema deve processar o envio de arquivos de imagem e armazená-los na pasta `imagens/`. | Alta | 
+| ID | Título | Descrição | Prioridade |
+| :--- | :--- | :--- | :--- |
+| **RF01** | Cadastro de Usuários | O sistema deve permitir que novos clientes criem uma conta informando nome de usuário e senha. | Alta |
+| **RF02** | Login e Autenticação | O sistema deve autenticar usuários cadastrados e abrir uma sessão válida. | Alta |
+| **RF03** | Controle de Acesso | O sistema deve restringir o acesso à pasta `admin/` apenas para usuários com o perfil `admin`. | Alta |
+| **RF04** | Encerramento de Sessão (Logout) | O sistema deve disponibilizar funcionalidade para encerrar a sessão ativa. | Alta |
+| **RF05** | Vitrine de Produtos | O sistema deve listar as cartas e produtos salvos no banco de dados na página inicial. | Alta |
+| **RF06** | Cadastro de Produtos | O sistema deve permitir que o administrador cadastre novos produtos com nome, descrição, preço, quantidade e foto. | Alta |
+| **RF07** | Edição de Produtos | O sistema deve permitir alterar os dados de um produto existente e atualizar sua imagem. | Alta |
+| **RF08** | Exclusão de Produtos | O sistema deve permitir ao administrador remover produtos do catálogo e do banco de dados. | Alta |
+| **RF09** | Upload de Imagens | O sistema deve processar o envio de arquivos de imagem e armazená-los na pasta `imagens/`. | Alta |
 
 ### 3.3 Requisitos Não Funcionais (RNF)
 
-| ID | Título | Descrição | Prioridade | 
-| ----- | ----- | ----- | ----- | 
-| **RNF01** | Tecnologias | O sistema deve ser desenvolvido em PHP com banco de dados PostgreSQL. | Alta | 
-| **RNF02** | Conexão Segura | As consultas ao banco de dados devem ser executadas via extensão PDO (`pgsql`). | Alta | 
-| **RNF03** | Endereçamento Dinâmico | O sistema deve construir as URLs usando `$_SERVER['HTTP_HOST']` para funcionar em qualquer IP de rede. | Alta | 
-| **RNF04** | Interface Responsiva | O layout deve ser estilizado via arquivo CSS próprio (`style.css`). | Média | 
+| ID | Título | Descrição | Prioridade |
+| :--- | :--- | :--- | :--- |
+| **RNF01** | Tecnologias | O sistema deve ser desenvolvido em PHP com banco de dados PostgreSQL. | Alta |
+| **RNF02** | Conexão Segura | As consultas ao banco de dados devem ser executadas via extensão PDO (`pgsql`). | Alta |
+| **RNF03** | Endereçamento Dinâmico | O sistema deve construir as URLs usando `$_SERVER['HTTP_HOST']` para funcionar em qualquer IP de rede. | Alta |
+| **RNF04** | Interface Responsiva | O layout deve ser estilizado via arquivo CSS próprio (`style.css`). | Média |
 
 ### 3.4 Regras de Negócio (RN)
 
-| ID | Título | Regra / Condição | 
-| ----- | ----- | ----- | 
-| **RN01** | Acesso Administrativo | Somente usuários identificados com `tipo = 'admin'` na sessão podem acessar as ferramentas em `admin/`. | 
-| **RN02** | Perfil Inicial | Todo cadastro feito pelo formulário público (`cadastrar.php`) recebe automaticamente o tipo `cliente`. | 
-| **RN03** | Preço e Estoque | O campo preço não pode conter valores negativos e a quantidade do produto deve ser um inteiro válido. | 
-| **RN04** | Integridade dos Arquivos | As fotos de produtos enviados devem ser renomeadas via código antes de salvas para evitar sobrescrever imagens com nomes iguais. | 
+| ID | Título | Regra / Condição |
+| :--- | :--- | :--- |
+| **RN01** | Acesso Administrativo | Somente usuários identificados com `tipo = 'admin'` na sessão podem acessar as ferramentas em `admin/`. |
+| **RN02** | Perfil Inicial | Todo cadastro feito pelo formulário público (`cadastrar.php`) recebe automaticamente o tipo `cliente`. |
+| **RN03** | Preço e Estoque | O campo preço não pode conter valores negativos e a quantidade do produto deve ser um inteiro válido. |
+| **RN04** | Integridade dos Arquivos | As fotos de produtos enviados devem ser renomeadas via código antes de salvas para evitar sobrescrever imagens com nomes iguais. |
 
 ## 4. Product Backlog
 
-| ID | Item | Descrição | Prioridade | Status | 
-| ----- | ----- | ----- | ----- | ----- | 
-| **PB01** | Modelagem do Banco | Criar a estrutura das tabelas `usuarios` e `produtos` no PostgreSQL. | Alta | Concluído | 
-| **PB02** | Script de Conexão | Implementar a conexão via PDO no arquivo `config/conexao.php`. | Alta | Concluído | 
-| **PB03** | Tela de Login e Cadastro | Criar formulários e lógica para autenticação e criação de contas. | Alta | Concluído | 
-| **PB04** | Vitrine de Produtos | Desenvolver as telas `index.php` e `produtos.php` para exibição dos produtos cadastrados. | Alta | Concluído | 
-| **PB05** | Painel Admin (CRUD) | Desenvolver as telas de adicionar, editar e excluir produtos. | Alta | Concluído | 
-| **PB06** | Sistema de Uploads | Criar o manipulador `uploads.php` para envio e salvamento de imagens. | Alta | Concluído | 
-| **PB07** | Configuração do Servidor | Ajustar permissões `chown` e `chmod` no Nginx para gravação de arquivos no Linux. | Alta | Concluído | 
+| ID | Item | Descrição | Prioridade | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **PB01** | Modelagem do Banco | Criar a estrutura das tabelas `usuarios` e `produtos` no PostgreSQL. | Alta | Concluído |
+| **PB02** | Script de Conexão | Implementar a conexão via PDO no arquivo `config/conexao.php`. | Alta | Concluído |
+| **PB03** | Tela de Login e Cadastro | Criar formulários e lógica para autenticação e criação de contas. | Alta | Concluído |
+| **PB04** | Vitrine de Produtos | Desenvolver as telas `index.php` e `produtos.php` para exibição dos produtos cadastrados. | Alta | Concluído |
+| **PB05** | Painel Admin (CRUD) | Desenvolver as telas de adicionar, editar e excluir produtos. | Alta | Concluído |
+| **PB06** | Sistema de Uploads | Criar o manipulador `uploads.php` para envio e salvamento de imagens. | Alta | Concluído |
+| **PB07** | Configuração do Servidor | Ajustar permissões `chown` e `chmod` no Nginx para gravação de arquivos no Linux. | Alta | Concluído |
 
 ## 5. Estrutura do Projeto
 
@@ -181,31 +196,29 @@ O banco de dados `pokemon_store` possui duas tabelas principais no schema `publi
 
 Armazena as contas registradas no sistema e o tipo de permissão de acesso.
 
-| Campo | Código | Tipo | Tamanho | Restrições | Descrição | 
-| ----- | ----- | ----- | ----- | ----- | ----- | 
-| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do usuário. | 
-| **Usuário** | `usuario` | VARCHAR | 50 | NOT NULL | Nome/Login utilizado para autenticação. | 
-| **Senha** | `senha` | VARCHAR | 50 | NOT NULL | Senha do usuário. | 
-| **Tipo** | `tipo` | VARCHAR | 20 | NOT NULL | Define a permissão (`admin` ou `cliente`). | 
+| Campo | Código | Tipo | Tamanho | Restrições | Descrição |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do usuário. |
+| **Usuário** | `usuario` | VARCHAR | 50 | NOT NULL | Nome/Login utilizado para autenticação. |
+| **Senha** | `senha` | VARCHAR | 50 | NOT NULL | Senha do usuário. |
+| **Tipo** | `tipo` | VARCHAR | 20 | NOT NULL | Define a permissão (`admin` ou `cliente`). |
 
 ### 6.2 Tabela: `produtos`
 
 Armazena as cartas e artigos Pokémon cadastrados para venda na loja.
 
-| Campo | Código | Tipo | Tamanho | Restrições | Descrição | 
-| ----- | ----- | ----- | ----- | ----- | ----- | 
-| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do produto. | 
-| **Nome** | `nome` | VARCHAR | 100 | NOT NULL | Nome da carta ou produto. | 
-| **Descrição** | `descricao` | VARCHAR | 255 | NULL | Descrição com detalhes sobre o produto. | 
-| **Preço** | `preco` | NUMERIC | (10,2) | NOT NULL | Valor de venda em Reais (R$). | 
-| **Quantidade** | `quantidade` | INTEGER | - | NOT NULL | Quantidade do item disponível em estoque. | 
-| **Imagem** | `imagem` | VARCHAR | 255 | NULL | Caminho/nome do arquivo de foto salvo na pasta `imagens/`. | 
+| Campo | Código | Tipo | Tamanho | Restrições | Descrição |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **ID** | `id` | INTEGER | - | Primary Key, Auto Increment | Identificador único do produto. |
+| **Nome** | `nome` | VARCHAR | 100 | NOT NULL | Nome da carta ou produto. |
+| **Descrição** | `descricao` | VARCHAR | 255 | NULL | Descrição com detalhes sobre o produto. |
+| **Preço** | `preco` | NUMERIC | (10,2) | NOT NULL | Valor de venda em Reais (R$). |
+| **Quantidade** | `quantidade` | INTEGER | - | NOT NULL | Quantidade do item disponível em estoque. |
+| **Imagem** | `imagem` | VARCHAR | 255 | NULL | Caminho/nome do arquivo de foto salvo na pasta `imagens/`. |
 
 ## 7. Diagramas
 
 ### 7.1 Diagrama Entidade-Relacionamento (DER)
-
-O DER abaixo representa a estrutura das entidades `USUARIOS` e `PRODUTOS` do sistema PokéStore e a relação de gerenciamento mantida pelo perfil administrativo.
 
 ```mermaid
 erDiagram
